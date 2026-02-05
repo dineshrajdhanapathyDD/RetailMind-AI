@@ -20,30 +20,30 @@ RetailMind AI is an enterprise-grade intelligent retail decision engine that pro
 
 The system implements the AWS Strands architecture pattern with six specialized layers:
 
-### Data Strand
+### Data 
 - Amazon Kinesis for real-time data ingestion
 - Amazon S3 for data lake storage
 - AWS Glue for ETL and data cataloging
 
-### AI/ML Strand
+### AI/ML 
 - Amazon SageMaker for ML model training and inference
 - Amazon Bedrock for foundation model access
 - Custom ML models for demand forecasting and price optimization
 
-### Application Strand
+### Application 
 - AWS Lambda for business logic execution
 - AWS Step Functions for workflow orchestration
 - MCP Agent for intelligent decision-making
 
-### Analytics Strand
+### Analytics 
 - Amazon QuickSight for dashboards and visualization
 - Amazon Redshift for data warehousing
 
-### Events Strand
+### Events 
 - Amazon EventBridge for event-driven communication
 - Amazon SNS for notifications and alerts
 
-### Security Strand
+### Security
 - AWS IAM for access control
 - Amazon CloudWatch for monitoring
 - AWS KMS for encryption
