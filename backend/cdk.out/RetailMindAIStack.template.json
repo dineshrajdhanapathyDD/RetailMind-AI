@@ -496,7 +496,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "c43a5ccd34e721bebe6fa8dd51b67dfd01af651c6ed7cc2726a49a62b60acdf1.zip"
+     "S3Key": "88e442cf6e152761d77cdce0ee15e3c70078e742beaaa61e3614089cf68f241f.zip"
     },
     "Environment": {
      "Variables": {
@@ -509,7 +509,7 @@
       "RECOMMENDATIONS_TABLE": {
        "Ref": "RecommendationsTable1B1B4C4D"
       },
-      "BEDROCK_MODEL_ID": "anthropic.claude-3-sonnet-20240229-v1:0"
+      "BEDROCK_MODEL_ID": "us.amazon.nova-premier-v1:0"
      }
     },
     "Handler": "generate_recommendations.handler",
@@ -528,7 +528,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "RetailMindAIStack/GenerateRecommendationsFunction/Resource",
-    "aws:asset:path": "asset.c43a5ccd34e721bebe6fa8dd51b67dfd01af651c6ed7cc2726a49a62b60acdf1",
+    "aws:asset:path": "asset.88e442cf6e152761d77cdce0ee15e3c70078e742beaaa61e3614089cf68f241f",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }
@@ -540,7 +540,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "c43a5ccd34e721bebe6fa8dd51b67dfd01af651c6ed7cc2726a49a62b60acdf1.zip"
+     "S3Key": "88e442cf6e152761d77cdce0ee15e3c70078e742beaaa61e3614089cf68f241f.zip"
     },
     "Environment": {
      "Variables": {
@@ -565,7 +565,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "RetailMindAIStack/GetRecommendationsFunction/Resource",
-    "aws:asset:path": "asset.c43a5ccd34e721bebe6fa8dd51b67dfd01af651c6ed7cc2726a49a62b60acdf1",
+    "aws:asset:path": "asset.88e442cf6e152761d77cdce0ee15e3c70078e742beaaa61e3614089cf68f241f",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }

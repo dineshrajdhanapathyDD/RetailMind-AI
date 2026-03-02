@@ -117,7 +117,7 @@ class InfrastructureStack(Stack):
                 "INVENTORY_TABLE": inventory_table.table_name,
                 "PRODUCTS_TABLE": products_table.table_name,
                 "RECOMMENDATIONS_TABLE": recommendations_table.table_name,
-                "BEDROCK_MODEL_ID": "anthropic.claude-3-sonnet-20240229-v1:0"
+                "BEDROCK_MODEL_ID": "us.amazon.nova-premier-v1:0"
             }
         )
 

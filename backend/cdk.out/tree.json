@@ -663,7 +663,7 @@
                       "s3Bucket": {
                         "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
                       },
-                      "s3Key": "c43a5ccd34e721bebe6fa8dd51b67dfd01af651c6ed7cc2726a49a62b60acdf1.zip"
+                      "s3Key": "88e442cf6e152761d77cdce0ee15e3c70078e742beaaa61e3614089cf68f241f.zip"
                     },
                     "environment": {
                       "variables": {
@@ -676,7 +676,7 @@
                         "RECOMMENDATIONS_TABLE": {
                           "Ref": "RecommendationsTable1B1B4C4D"
                         },
-                        "BEDROCK_MODEL_ID": "anthropic.claude-3-sonnet-20240229-v1:0"
+                        "BEDROCK_MODEL_ID": "us.amazon.nova-premier-v1:0"
                       }
                     },
                     "handler": "generate_recommendations.handler",
@@ -741,7 +741,7 @@
                       "s3Bucket": {
                         "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
                       },
-                      "s3Key": "c43a5ccd34e721bebe6fa8dd51b67dfd01af651c6ed7cc2726a49a62b60acdf1.zip"
+                      "s3Key": "88e442cf6e152761d77cdce0ee15e3c70078e742beaaa61e3614089cf68f241f.zip"
                     },
                     "environment": {
                       "variables": {
