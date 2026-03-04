@@ -4,9 +4,11 @@ An AWS-powered intelligent retail decision engine that leverages Amazon Bedrock 
 
 ## Architecture
 
+![Architecture Diagram](generated-diagrams/retailmind-ai-nova-premier-architecture.png)
+
 - **Backend**: AWS CDK (Python), Lambda, DynamoDB, API Gateway, Amazon Bedrock
 - **Frontend**: React + TypeScript + Vite + Tailwind CSS
-- **AI**: Amazon Bedrock (Claude model) for intelligent recommendations
+- **AI**: Amazon Bedrock (Nova Premier model) for intelligent recommendations
 
 ## Features
 
