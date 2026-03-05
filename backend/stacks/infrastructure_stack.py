@@ -158,6 +158,20 @@ class InfrastructureStack(Stack):
             }
         )
 
+        clear_all_data_fn = lambda_.Function(
+            self, "ClearAllDataFunction",
+            runtime=lambda_.Runtime.PYTHON_3_12,
+            handler="clear_all_data.handler",
+            code=lambda_.Code.from_asset("lambda/data"),
+            role=lambda_role,
+            timeout=Duration.seconds(60),
+            environment={
+                "PRODUCTS_TABLE": products_table.table_name,
+                "INVENTORY_TABLE": inventory_table.table_name,
+                "RECOMMENDATIONS_TABLE": recommendations_table.table_name,
+            }
+        )
+
         # API Gateway
         api = apigateway.RestApi(
             self, "RetailMindAPI",
@@ -197,4 +211,10 @@ class InfrastructureStack(Stack):
         seed_resource.add_method(
             "POST",
             apigateway.LambdaIntegration(seed_data_fn)
+        )
+
+        clear_all_resource = api.root.add_resource("clear-all")
+        clear_all_resource.add_method(
+            "DELETE",
+            apigateway.LambdaIntegration(clear_all_data_fn)
         )

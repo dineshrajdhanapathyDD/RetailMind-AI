@@ -23,6 +23,7 @@ Documentation for specific features and enhancements.
 - [INR_AND_FILE_UPLOAD_UPDATE.md](features/INR_AND_FILE_UPLOAD_UPDATE.md) - INR currency and file upload feature
 - [RECOMMENDATIONS_INR_AND_ACTIONS.md](features/RECOMMENDATIONS_INR_AND_ACTIONS.md) - Recommendations page with INR and Accept/Dismiss actions
 - [TASK_8_COMPLETION.md](features/TASK_8_COMPLETION.md) - Task 8 completion summary
+- [CLEAR_ALL_DATA.md](features/CLEAR_ALL_DATA.md) - Clear all data functionality with safety confirmations
 
 ### 📋 Templates
 Documentation and guides for data templates.

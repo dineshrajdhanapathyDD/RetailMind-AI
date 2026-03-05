@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Lightbulb, TrendingUp, Sparkles, Package, Target, Brain, Check, X } from 'lucide-react'
+import { Lightbulb, TrendingUp, Sparkles, Package, Target, Brain, Check, X, Trash2 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config'
 import axios from 'axios'
 
 export default function Recommendations() {
   const [processingId, setProcessingId] = useState<string | null>(null)
+  const [clearing, setClearing] = useState(false)
   
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['recommendations'],
@@ -78,6 +79,34 @@ export default function Recommendations() {
     }
   }
 
+  const handleClearAll = async () => {
+    // Show confirmation
+    const confirmed = window.confirm(
+      'Clear all recommendations?\n\n' +
+      'This will remove ALL pending recommendations from your list. ' +
+      'This action cannot be undone. You can generate new recommendations afterwards.'
+    )
+    
+    if (!confirmed) return
+    
+    setClearing(true)
+    try {
+      // Dismiss all recommendations one by one
+      for (const rec of recommendations) {
+        await axios.patch(`${API_ENDPOINTS.recommendations}/${rec.recommendationId}`, {
+          status: 'dismissed'
+        })
+      }
+      await refetch()
+      alert('✓ All recommendations cleared successfully!')
+    } catch (error) {
+      console.error('Error clearing recommendations:', error)
+      alert('Failed to clear recommendations. Please try again.')
+    } finally {
+      setClearing(false)
+    }
+  }
+
   if (isLoading) {
     return <div className="text-center py-8">Loading...</div>
   }
@@ -105,25 +134,67 @@ export default function Recommendations() {
               <p className="text-lg text-purple-100">Intelligent insights powered by Amazon Bedrock</p>
             </div>
           </div>
-          <button
-            onClick={handleGenerateRecommendations}
-            className="hidden md:flex items-center px-6 py-3 bg-white text-purple-600 rounded-xl hover:shadow-xl transition-all duration-200 font-bold group"
-          >
-            <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
-            Generate New Recommendations
-          </button>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={handleGenerateRecommendations}
+              disabled={clearing}
+              className="hidden md:flex items-center px-6 py-3 bg-white text-purple-600 rounded-xl hover:shadow-xl transition-all duration-200 font-bold group disabled:opacity-50"
+            >
+              <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+              Generate New
+            </button>
+            {recommendations.length > 0 && (
+              <button
+                onClick={handleClearAll}
+                disabled={clearing}
+                className="hidden md:flex items-center px-6 py-3 bg-red-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-bold group disabled:opacity-50"
+              >
+                {clearing ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
+                    Clearing...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-5 h-5 mr-2" />
+                    Clear All
+                  </>
+                )}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Mobile Generate Button */}
-      <div className="md:hidden">
+      {/* Mobile Action Buttons */}
+      <div className="md:hidden space-y-3">
         <button
           onClick={handleGenerateRecommendations}
-          className="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-medium group"
+          disabled={clearing}
+          className="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-medium group disabled:opacity-50"
         >
           <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
           Generate New Recommendations
         </button>
+        {recommendations.length > 0 && (
+          <button
+            onClick={handleClearAll}
+            disabled={clearing}
+            className="w-full flex items-center justify-center px-6 py-3 bg-red-600 text-white rounded-xl hover:shadow-xl transition-all duration-200 font-medium disabled:opacity-50"
+          >
+            {clearing ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
+                Clearing All...
+              </>
+            ) : (
+              <>
+                <Trash2 className="w-5 h-5 mr-2" />
+                Clear All Recommendations
+              </>
+            )}
+          </button>
+        )}
       </div>
 
       {recommendations.length === 0 ? (

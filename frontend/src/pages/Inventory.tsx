@@ -1,10 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import { Package, AlertTriangle, TrendingUp, ShoppingCart, BarChart3, Box } from 'lucide-react'
+import { Package, AlertTriangle, TrendingUp, ShoppingCart, BarChart3, Box, Trash2 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config'
 import axios from 'axios'
+import { useState } from 'react'
 
 export default function Inventory() {
-  const { data, isLoading } = useQuery({
+  const [clearing, setClearing] = useState(false)
+  
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['inventory'],
     queryFn: async () => {
       const response = await axios.get(API_ENDPOINTS.inventory)
@@ -25,6 +28,40 @@ export default function Inventory() {
   const lowStockCount = items.filter((item: any) => item.status === 'low' || item.status === 'critical').length
   const optimalCount = items.filter((item: any) => item.status === 'optimal').length
   const totalValue = items.reduce((sum: number, item: any) => sum + (item.price * item.currentStock), 0)
+
+  const handleClearAllData = async () => {
+    const confirmed = window.confirm(
+      '⚠️ Clear ALL Inventory Data?\n\n' +
+      'This will permanently delete:\n' +
+      '• All products\n' +
+      '• All inventory records\n' +
+      '• All recommendations\n\n' +
+      'This action CANNOT be undone!\n\n' +
+      'Are you absolutely sure?'
+    )
+    
+    if (!confirmed) return
+    
+    // Double confirmation for safety
+    const doubleConfirm = window.confirm(
+      'Final Confirmation\n\n' +
+      'Click OK to permanently delete all data, or Cancel to keep your data.'
+    )
+    
+    if (!doubleConfirm) return
+    
+    setClearing(true)
+    try {
+      await axios.delete(API_ENDPOINTS.clearAll)
+      alert('✓ All data cleared successfully!')
+      refetch()
+    } catch (error) {
+      console.error('Error clearing data:', error)
+      alert('Failed to clear data. Please try again.')
+    } finally {
+      setClearing(false)
+    }
+  }
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -49,6 +86,25 @@ export default function Inventory() {
             <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
               <BarChart3 className="w-8 h-8" />
             </div>
+            {items.length > 0 && (
+              <button
+                onClick={handleClearAllData}
+                disabled={clearing}
+                className="flex items-center px-6 py-3 bg-red-600/90 backdrop-blur-sm text-white rounded-xl hover:bg-red-700 transition-all duration-200 font-medium border-2 border-red-500/50 hover:border-red-400 shadow-lg disabled:opacity-50"
+              >
+                {clearing ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
+                    Clearing...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-5 h-5 mr-2" />
+                    Clear All
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -79,7 +135,7 @@ export default function Inventory() {
         />
         <StatCard
           title="Total Value"
-          value={`$${totalValue.toFixed(0)}`}
+          value={`₹${totalValue.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`}
           icon={<BarChart3 className="w-6 h-6" />}
           color="purple"
           subtitle="Inventory worth"
@@ -158,10 +214,10 @@ export default function Inventory() {
                     <StatusBadge status={item.status} currentStock={item.currentStock} reorderPoint={item.reorderPoint} />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                    ${item.price?.toFixed(2)}
+                    ₹{item.price?.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-emerald-600">
-                    ${(item.price * item.currentStock).toFixed(2)}
+                    ₹{(item.price * item.currentStock).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                 </tr>
               ))}

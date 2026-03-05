@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Package, TrendingUp, AlertCircle, CheckCircle, Sparkles, ArrowUp, ArrowDown, Database } from 'lucide-react'
+import { Package, TrendingUp, AlertCircle, CheckCircle, Sparkles, ArrowUp, ArrowDown, Database, Trash2 } from 'lucide-react'
 import { API_ENDPOINTS } from '../config'
 import axios from 'axios'
 import RetailImageGallery from '../components/RetailImageGallery'
@@ -8,7 +8,9 @@ import DataUploadModal from '../components/DataUploadModal'
 
 export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { data: inventory } = useQuery({
+  const [clearing, setClearing] = useState(false)
+  
+  const { data: inventory, refetch: refetchInventory } = useQuery({
     queryKey: ['inventory'],
     queryFn: async () => {
       const response = await axios.get(API_ENDPOINTS.inventory)
@@ -16,7 +18,7 @@ export default function Dashboard() {
     }
   })
 
-  const { data: recommendations } = useQuery({
+  const { data: recommendations, refetch: refetchRecommendations } = useQuery({
     queryKey: ['recommendations'],
     queryFn: async () => {
       const response = await axios.get(API_ENDPOINTS.recommendations)
@@ -35,6 +37,41 @@ export default function Dashboard() {
   const activeRecommendations = recommendationsList.filter((rec: any) => 
     rec.status === 'pending'
   ).length
+
+  const handleClearAllData = async () => {
+    const confirmed = window.confirm(
+      '⚠️ Clear ALL Data?\n\n' +
+      'This will permanently delete:\n' +
+      '• All products\n' +
+      '• All inventory records\n' +
+      '• All recommendations\n\n' +
+      'This action CANNOT be undone!\n\n' +
+      'Are you absolutely sure?'
+    )
+    
+    if (!confirmed) return
+    
+    // Double confirmation for safety
+    const doubleConfirm = window.confirm(
+      'Final Confirmation\n\n' +
+      'Click OK to permanently delete all data, or Cancel to keep your data.'
+    )
+    
+    if (!doubleConfirm) return
+    
+    setClearing(true)
+    try {
+      await axios.delete(API_ENDPOINTS.clearAll)
+      alert('✓ All data cleared successfully!')
+      refetchInventory()
+      refetchRecommendations()
+    } catch (error) {
+      console.error('Error clearing data:', error)
+      alert('Failed to clear data. Please try again.')
+    } finally {
+      setClearing(false)
+    }
+  }
 
   return (
     <div className="space-y-8 animate-fadeIn">
@@ -62,13 +99,35 @@ export default function Dashboard() {
                 AI-powered retail intelligence powered by Amazon Bedrock
               </p>
             </div>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="flex items-center px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-xl hover:bg-white/30 transition-all duration-200 font-medium border-2 border-white/30 hover:border-white/50 shadow-lg"
-            >
-              <Database className="w-5 h-5 mr-2" />
-              Seed Data
-            </button>
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                disabled={clearing}
+                className="flex items-center px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-xl hover:bg-white/30 transition-all duration-200 font-medium border-2 border-white/30 hover:border-white/50 shadow-lg disabled:opacity-50"
+              >
+                <Database className="w-5 h-5 mr-2" />
+                Seed Data
+              </button>
+              {inventoryItems.length > 0 && (
+                <button
+                  onClick={handleClearAllData}
+                  disabled={clearing}
+                  className="flex items-center px-6 py-3 bg-red-600/90 backdrop-blur-sm text-white rounded-xl hover:bg-red-700 transition-all duration-200 font-medium border-2 border-red-500/50 hover:border-red-400 shadow-lg disabled:opacity-50"
+                >
+                  {clearing ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
+                      Clearing...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-5 h-5 mr-2" />
+                      Clear All
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

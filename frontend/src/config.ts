@@ -5,4 +5,5 @@ export const API_ENDPOINTS = {
   inventory: `${API_BASE_URL}/inventory`,
   recommendations: `${API_BASE_URL}/recommendations`,
   seed: `${API_BASE_URL}/seed`,
+  clearAll: `${API_BASE_URL}/clear-all`,
 }
