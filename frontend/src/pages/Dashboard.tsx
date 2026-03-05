@@ -15,7 +15,7 @@ export default function Dashboard() {
   const [generating, setGenerating] = useState(false)
   
   // Parallel data fetching for performance
-  const { data: inventory, refetch: refetchInventory, isLoading: inventoryLoading } = useQuery({
+  const { data: inventory, refetch: refetchInventory } = useQuery({
     queryKey: ['inventory'],
     queryFn: async () => {
       const response = await axios.get(API_ENDPOINTS.inventory)
