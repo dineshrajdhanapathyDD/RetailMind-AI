@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/c1b0661fe51ca3a74a40bc13d68d9e54cdb34bb983a236354aa82b3313b92ef2.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/e6a1f14c94a6d82953d83492fc087e9949c6434d55c604d6bcb39fe5ba33a9d7.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -142,6 +142,18 @@
             "data": "GetRecommendationsFunction8079E42C"
           }
         ],
+        "/RetailMindAIStack/UpdateRecommendationFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UpdateRecommendationFunctionC322218B"
+          }
+        ],
+        "/RetailMindAIStack/SeedDataFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "SeedDataFunction0523C2C2"
+          }
+        ],
         "/RetailMindAIStack/RetailMindAPI/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -163,7 +175,7 @@
         "/RetailMindAIStack/RetailMindAPI/Deployment/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "RetailMindAPIDeploymentF79B8032fbff554d8befd62d842fa88e68ddb24b"
+            "data": "RetailMindAPIDeploymentF79B80322c7272038aa65a992072dec8193511b4"
           }
         ],
         "/RetailMindAIStack/RetailMindAPI/DeploymentStage.prod/Resource": [
@@ -260,6 +272,66 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "RetailMindAPIrecommendationsPOSTE66541C1"
+          }
+        ],
+        "/RetailMindAIStack/RetailMindAPI/Default/recommendations/{id}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RetailMindAPIrecommendationsid930BB3BA"
+          }
+        ],
+        "/RetailMindAIStack/RetailMindAPI/Default/recommendations/{id}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RetailMindAPIrecommendationsidOPTIONSE3DC4EC6"
+          }
+        ],
+        "/RetailMindAIStack/RetailMindAPI/Default/recommendations/{id}/PATCH/ApiPermission.RetailMindAIStackRetailMindAPI6AFD9F70.PATCH..recommendations.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RetailMindAPIrecommendationsidPATCHApiPermissionRetailMindAIStackRetailMindAPI6AFD9F70PATCHrecommendationsid4BA71FEE"
+          }
+        ],
+        "/RetailMindAIStack/RetailMindAPI/Default/recommendations/{id}/PATCH/ApiPermission.Test.RetailMindAIStackRetailMindAPI6AFD9F70.PATCH..recommendations.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RetailMindAPIrecommendationsidPATCHApiPermissionTestRetailMindAIStackRetailMindAPI6AFD9F70PATCHrecommendationsid5CCB3180"
+          }
+        ],
+        "/RetailMindAIStack/RetailMindAPI/Default/recommendations/{id}/PATCH/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RetailMindAPIrecommendationsidPATCH531A2BA4"
+          }
+        ],
+        "/RetailMindAIStack/RetailMindAPI/Default/seed/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RetailMindAPIseed36CCD5B6"
+          }
+        ],
+        "/RetailMindAIStack/RetailMindAPI/Default/seed/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RetailMindAPIseedOPTIONS4B06C8C3"
+          }
+        ],
+        "/RetailMindAIStack/RetailMindAPI/Default/seed/POST/ApiPermission.RetailMindAIStackRetailMindAPI6AFD9F70.POST..seed": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RetailMindAPIseedPOSTApiPermissionRetailMindAIStackRetailMindAPI6AFD9F70POSTseed9B963C63"
+          }
+        ],
+        "/RetailMindAIStack/RetailMindAPI/Default/seed/POST/ApiPermission.Test.RetailMindAIStackRetailMindAPI6AFD9F70.POST..seed": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RetailMindAPIseedPOSTApiPermissionTestRetailMindAIStackRetailMindAPI6AFD9F70POSTseedA95A019C"
+          }
+        ],
+        "/RetailMindAIStack/RetailMindAPI/Default/seed/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RetailMindAPIseedPOST6A7A75F1"
           }
         ],
         "/RetailMindAIStack/CDKMetadata/Default": [

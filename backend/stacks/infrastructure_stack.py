@@ -133,6 +133,31 @@ class InfrastructureStack(Stack):
             }
         )
 
+        update_recommendation_fn = lambda_.Function(
+            self, "UpdateRecommendationFunction",
+            runtime=lambda_.Runtime.PYTHON_3_12,
+            handler="update_recommendation.handler",
+            code=lambda_.Code.from_asset("lambda/recommendations"),
+            role=lambda_role,
+            timeout=Duration.seconds(30),
+            environment={
+                "RECOMMENDATIONS_TABLE": recommendations_table.table_name,
+            }
+        )
+
+        seed_data_fn = lambda_.Function(
+            self, "SeedDataFunction",
+            runtime=lambda_.Runtime.PYTHON_3_12,
+            handler="seed_data.handler",
+            code=lambda_.Code.from_asset("lambda/data"),
+            role=lambda_role,
+            timeout=Duration.seconds(30),
+            environment={
+                "PRODUCTS_TABLE": products_table.table_name,
+                "INVENTORY_TABLE": inventory_table.table_name,
+            }
+        )
+
         # API Gateway
         api = apigateway.RestApi(
             self, "RetailMindAPI",
@@ -159,4 +184,17 @@ class InfrastructureStack(Stack):
         recommendations_resource.add_method(
             "POST",
             apigateway.LambdaIntegration(generate_recommendations_fn)
+        )
+
+        # Add {id} resource for updating specific recommendation
+        recommendation_id_resource = recommendations_resource.add_resource("{id}")
+        recommendation_id_resource.add_method(
+            "PATCH",
+            apigateway.LambdaIntegration(update_recommendation_fn)
+        )
+
+        seed_resource = api.root.add_resource("seed")
+        seed_resource.add_method(
+            "POST",
+            apigateway.LambdaIntegration(seed_data_fn)
         )

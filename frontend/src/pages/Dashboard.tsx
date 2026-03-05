@@ -1,10 +1,13 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Package, TrendingUp, AlertCircle, CheckCircle, Sparkles, ArrowUp, ArrowDown } from 'lucide-react'
+import { Package, TrendingUp, AlertCircle, CheckCircle, Sparkles, ArrowUp, ArrowDown, Database } from 'lucide-react'
 import { API_ENDPOINTS } from '../config'
 import axios from 'axios'
 import RetailImageGallery from '../components/RetailImageGallery'
+import DataUploadModal from '../components/DataUploadModal'
 
 export default function Dashboard() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const { data: inventory } = useQuery({
     queryKey: ['inventory'],
     queryFn: async () => {
@@ -35,18 +38,38 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8 animate-fadeIn">
+      {/* Data Upload Modal */}
+      <DataUploadModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={() => {
+          window.location.reload()
+        }}
+      />
+
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-2xl p-8 text-white">
         <div className="absolute top-0 right-0 -mt-4 -mr-4 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 -mb-4 -ml-4 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
         <div className="relative z-10">
-          <div className="flex items-center space-x-3 mb-2">
-            <Sparkles className="w-8 h-8" />
-            <h2 className="text-3xl font-bold">Welcome to RetailMind AI</h2>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center space-x-3 mb-2">
+                <Sparkles className="w-8 h-8" />
+                <h2 className="text-3xl font-bold">Welcome to RetailMind AI</h2>
+              </div>
+              <p className="text-blue-100 text-lg">
+                AI-powered retail intelligence powered by Amazon Bedrock
+              </p>
+            </div>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-xl hover:bg-white/30 transition-all duration-200 font-medium border-2 border-white/30 hover:border-white/50 shadow-lg"
+            >
+              <Database className="w-5 h-5 mr-2" />
+              Seed Data
+            </button>
           </div>
-          <p className="text-blue-100 text-lg">
-            AI-powered retail intelligence powered by Amazon Bedrock
-          </p>
         </div>
       </div>
 

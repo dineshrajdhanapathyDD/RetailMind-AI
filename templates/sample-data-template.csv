@@ -1,0 +1,11 @@
+productId,name,sku,category,brand,price,cost,currency,storeId,currentStock,reservedStock,availableStock,reorderPoint,maxStock
+PROD001,Wireless Mouse,WM-001,Electronics,TechPro,2499,1250,INR,STORE001,5,0,5,10,50
+PROD002,USB-C Cable,UC-002,Electronics,TechPro,1099,450,INR,STORE001,25,2,23,20,100
+PROD003,Laptop Stand,LS-003,Accessories,ErgoDesk,4199,2100,INR,STORE001,8,1,7,15,30
+PROD004,Mechanical Keyboard,MK-004,Electronics,KeyMaster,7499,3750,INR,STORE001,0,0,0,5,20
+PROD005,Webcam HD,WC-005,Electronics,VisionTech,5899,2950,INR,STORE001,12,0,12,10,25
+PROD006,Bluetooth Speaker,BS-006,Electronics,SoundMax,3499,1750,INR,STORE001,15,3,12,10,40
+PROD007,Phone Charger,PC-007,Electronics,PowerPlus,899,400,INR,STORE001,30,5,25,20,100
+PROD008,Monitor Stand,MS-008,Accessories,ErgoDesk,3299,1650,INR,STORE001,6,0,6,8,25
+PROD009,Desk Lamp,DL-009,Accessories,LightPro,2199,1100,INR,STORE001,10,2,8,12,30
+PROD010,Cable Organizer,CO-010,Accessories,DeskMate,599,250,INR,STORE001,50,10,40,30,150

@@ -99,25 +99,19 @@ def generate_reorder_recommendation(item, product, current_stock, reorder_point)
 def enhance_with_bedrock(recommendations):
     """Use Amazon Bedrock to enhance recommendations with AI insights"""
     try:
-        # Prepare a cleaner prompt for Bedrock
-        products_summary = []
-        for rec in recommendations:
-            products_summary.append(
-                f"- {rec['productName']}: Current stock {rec['currentStock']}, "
-                f"Reorder point {rec['reorderPoint']}, Need {rec['recommendedQuantity']} units"
-            )
-        
-        prompt = f"""You are a retail inventory expert. Analyze these low-stock situations and provide brief, actionable insights.
+        # Prepare prompt for Bedrock
+        prompt = f"""You are a retail inventory AI assistant. Analyze these inventory situations and provide actionable recommendations.
 
-Products needing reorder:
-{chr(10).join(products_summary)}
+Inventory Data:
+{json.dumps(recommendations, indent=2)}
 
-For each product, provide a single sentence explaining:
-- Why this reorder is important
-- The business impact of not reordering
-- Any urgency factors
+For each item, provide:
+1. Priority level (critical/high/medium/low)
+2. Confidence score (0-100)
+3. Brief reasoning (1-2 sentences)
+4. Estimated business impact
 
-Keep each insight to 1-2 sentences maximum. Be concise and actionable."""
+Respond in JSON format with an array of recommendations."""
 
         # Call Bedrock with Nova model format
         response = bedrock.invoke_model(
@@ -134,7 +128,7 @@ Keep each insight to 1-2 sentences maximum. Be concise and actionable."""
                     }
                 ],
                 "inferenceConfig": {
-                    "max_new_tokens": 1000,
+                    "max_new_tokens": 2000,
                     "temperature": 0.7
                 }
             })
@@ -149,57 +143,20 @@ Keep each insight to 1-2 sentences maximum. Be concise and actionable."""
             if content and len(content) > 0:
                 ai_response = content[0].get('text', '')
         
-        print(f"AI Response: {ai_response}")
-        
         # Parse AI response and enhance recommendations
         enhanced = []
-        ai_insights = []
-        
-        # Try to extract insights from AI response
-        if ai_response:
-            # Split by lines and filter out empty lines
-            lines = [line.strip() for line in ai_response.split('\n') if line.strip()]
-            # Remove markdown formatting and bullet points
-            for line in lines:
-                cleaned = line.lstrip('- *•').strip()
-                if cleaned and len(cleaned) > 20:  # Only meaningful insights
-                    ai_insights.append(cleaned)
-        
         for i, rec in enumerate(recommendations):
             recommendation_id = str(uuid.uuid4())
             timestamp = datetime.utcnow().isoformat()
-            
-            # Determine priority based on stock level
-            if rec['currentStock'] == 0:
-                priority = 'critical'
-                confidence = 95
-            elif rec['currentStock'] < rec['reorderPoint'] / 2:
-                priority = 'high'
-                confidence = 90
-            else:
-                priority = 'medium'
-                confidence = 85
-            
-            # Get AI insight for this product or use fallback
-            if i < len(ai_insights):
-                insight = ai_insights[i]
-            else:
-                # Fallback insights based on stock level
-                if rec['currentStock'] == 0:
-                    insight = f"Critical: {rec['productName']} is out of stock. Immediate reorder required to prevent lost sales and customer dissatisfaction."
-                elif rec['currentStock'] < rec['reorderPoint'] / 2:
-                    insight = f"Urgent: {rec['productName']} stock is critically low. Reorder now to maintain inventory levels and avoid stockouts."
-                else:
-                    insight = f"Recommended: {rec['productName']} has reached reorder point. Timely restocking will ensure continuous availability."
             
             enhanced_rec = {
                 'recommendationId': recommendation_id,
                 'timestamp': timestamp,
                 'type': 'inventory_reorder',
                 'title': f"Reorder {rec['productName']}",
-                'description': f"Current stock ({rec['currentStock']}) is below reorder point ({rec['reorderPoint']}). Recommend ordering {rec['recommendedQuantity']} units to maintain optimal inventory levels.",
-                'priority': priority,
-                'confidence': Decimal(str(confidence)),
+                'description': f"Current stock ({rec['currentStock']}) is below reorder point ({rec['reorderPoint']}). Recommend ordering {rec['recommendedQuantity']} units.",
+                'priority': 'high' if rec['currentStock'] == 0 else 'medium',
+                'confidence': Decimal('85.5'),
                 'category': 'inventory',
                 'productId': rec['productId'],
                 'productName': rec['productName'],
@@ -207,7 +164,7 @@ Keep each insight to 1-2 sentences maximum. Be concise and actionable."""
                 'recommendedQuantity': Decimal(str(rec['recommendedQuantity'])),
                 'estimatedCost': Decimal(str(rec['estimatedCost'])),
                 'status': 'pending',
-                'aiInsight': insight[:300]  # Limit to 300 characters
+                'aiInsight': ai_response[:200] if ai_response else 'AI analysis powered by Amazon Nova'
             }
             enhanced.append(enhanced_rec)
         
@@ -215,34 +172,20 @@ Keep each insight to 1-2 sentences maximum. Be concise and actionable."""
     
     except Exception as e:
         print(f"Bedrock error: {str(e)}")
-        # Fallback to basic recommendations with good insights
+        # Fallback to basic recommendations
         enhanced = []
         for rec in recommendations:
             recommendation_id = str(uuid.uuid4())
             timestamp = datetime.utcnow().isoformat()
-            
-            # Determine priority and insight based on stock level
-            if rec['currentStock'] == 0:
-                priority = 'critical'
-                confidence = 95
-                insight = f"Critical: {rec['productName']} is completely out of stock. Immediate reorder required to prevent lost sales and customer dissatisfaction."
-            elif rec['currentStock'] < rec['reorderPoint'] / 2:
-                priority = 'high'
-                confidence = 90
-                insight = f"Urgent: {rec['productName']} stock is critically low at {rec['currentStock']} units. Reorder now to maintain service levels."
-            else:
-                priority = 'medium'
-                confidence = 85
-                insight = f"Recommended: {rec['productName']} has reached reorder point. Timely restocking will ensure continuous availability for customers."
             
             enhanced_rec = {
                 'recommendationId': recommendation_id,
                 'timestamp': timestamp,
                 'type': 'inventory_reorder',
                 'title': f"Reorder {rec['productName']}",
-                'description': f"Current stock ({rec['currentStock']}) is below reorder point ({rec['reorderPoint']}). Recommend ordering {rec['recommendedQuantity']} units to maintain optimal inventory levels.",
-                'priority': priority,
-                'confidence': Decimal(str(confidence)),
+                'description': f"Current stock ({rec['currentStock']}) is below reorder point ({rec['reorderPoint']}). Recommend ordering {rec['recommendedQuantity']} units.",
+                'priority': 'high' if rec['currentStock'] == 0 else 'medium',
+                'confidence': Decimal('75.0'),
                 'category': 'inventory',
                 'productId': rec['productId'],
                 'productName': rec['productName'],
@@ -250,7 +193,7 @@ Keep each insight to 1-2 sentences maximum. Be concise and actionable."""
                 'recommendedQuantity': Decimal(str(rec['recommendedQuantity'])),
                 'estimatedCost': Decimal(str(rec['estimatedCost'])),
                 'status': 'pending',
-                'aiInsight': insight
+                'aiInsight': 'Basic recommendation without AI enhancement'
             }
             enhanced.append(enhanced_rec)
         

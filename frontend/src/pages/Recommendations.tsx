@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Lightbulb, TrendingUp, Sparkles, Package, Target, Brain } from 'lucide-react'
+import { Lightbulb, TrendingUp, Sparkles, Package, Target, Brain, Check, X } from 'lucide-react'
 import { API_ENDPOINTS } from '../config'
 import axios from 'axios'
 
 export default function Recommendations() {
+  const [processingId, setProcessingId] = useState<string | null>(null)
+  
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['recommendations'],
     queryFn: async () => {
@@ -20,6 +23,58 @@ export default function Recommendations() {
       refetch()
     } catch (error) {
       console.error('Error generating recommendations:', error)
+    }
+  }
+
+  const handleAccept = async (recommendationId: string) => {
+    // Show confirmation
+    const confirmed = window.confirm(
+      'Accept this recommendation?\n\n' +
+      'This will mark the recommendation as accepted and remove it from your pending list. ' +
+      'You can proceed with ordering the recommended quantity.'
+    )
+    
+    if (!confirmed) return
+    
+    setProcessingId(recommendationId)
+    try {
+      await axios.patch(`${API_ENDPOINTS.recommendations}/${recommendationId}`, {
+        status: 'accepted'
+      })
+      await refetch()
+      // Show success message
+      alert('✓ Recommendation accepted successfully!')
+    } catch (error) {
+      console.error('Error accepting recommendation:', error)
+      alert('Failed to accept recommendation. Please try again.')
+    } finally {
+      setProcessingId(null)
+    }
+  }
+
+  const handleDismiss = async (recommendationId: string) => {
+    // Show confirmation
+    const confirmed = window.confirm(
+      'Dismiss this recommendation?\n\n' +
+      'This will remove the recommendation from your pending list. ' +
+      'You can always generate new recommendations later.'
+    )
+    
+    if (!confirmed) return
+    
+    setProcessingId(recommendationId)
+    try {
+      await axios.patch(`${API_ENDPOINTS.recommendations}/${recommendationId}`, {
+        status: 'dismissed'
+      })
+      await refetch()
+      // Show success message
+      alert('✓ Recommendation dismissed successfully!')
+    } catch (error) {
+      console.error('Error dismissing recommendation:', error)
+      alert('Failed to dismiss recommendation. Please try again.')
+    } finally {
+      setProcessingId(null)
     }
   }
 
@@ -141,7 +196,7 @@ export default function Recommendations() {
                       </div>
                       <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4">
                         <p className="text-xs text-green-600 font-medium mb-1">Estimated Cost</p>
-                        <p className="text-2xl font-bold text-green-900">${rec.estimatedCost?.toFixed(2)}</p>
+                        <p className="text-2xl font-bold text-green-900">₹{rec.estimatedCost?.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                       </div>
                       <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4">
                         <p className="text-xs text-orange-600 font-medium mb-1">Confidence</p>
@@ -182,11 +237,39 @@ export default function Recommendations() {
                       </span>
                       
                       <div className="flex space-x-3">
-                        <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium">
-                          Accept
+                        <button 
+                          onClick={() => handleAccept(rec.recommendationId)}
+                          disabled={processingId === rec.recommendationId}
+                          className="px-6 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                        >
+                          {processingId === rec.recommendationId ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                              <span>Processing...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Check className="w-4 h-4" />
+                              <span>Accept</span>
+                            </>
+                          )}
                         </button>
-                        <button className="px-6 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium">
-                          Dismiss
+                        <button 
+                          onClick={() => handleDismiss(rec.recommendationId)}
+                          disabled={processingId === rec.recommendationId}
+                          className="px-6 py-2 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                        >
+                          {processingId === rec.recommendationId ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-700" />
+                              <span>Processing...</span>
+                            </>
+                          ) : (
+                            <>
+                              <X className="w-4 h-4" />
+                              <span>Dismiss</span>
+                            </>
+                          )}
                         </button>
                       </div>
                     </div>
