@@ -3,6 +3,8 @@
 > **Built for AI for Bharat** 🇮🇳  
 > Empowering Indian retailers with AI-powered inventory intelligence
 
+
+
 An AWS-powered intelligent retail decision engine that leverages Amazon Bedrock for AI-powered inventory recommendations and automated business actions. Built with serverless architecture using AWS CDK, Lambda, DynamoDB, and React, specifically designed for the Indian retail market.
 
 ## 🇮🇳 AI for Bharat Initiative
@@ -18,6 +20,27 @@ This project is built as part of the **AI for Bharat** initiative, demonstrating
 ## 🎯 Overview
 
 RetailMind AI helps Indian retailers make data-driven inventory decisions using artificial intelligence. The system monitors inventory levels, generates intelligent reorder recommendations, and provides actionable insights powered by Amazon Bedrock Nova Premier - all optimized for the Indian retail ecosystem.
+
+### 🌐 Live Demo
+
+**Try it now**: [https://main.d9i6dbk7fpk6o.amplifyapp.com/](https://main.d9i6dbk7fpk6o.amplifyapp.com/)
+
+Experience the premium AI SaaS dashboard with:
+- Real-time inventory monitoring
+- AI-powered recommendations
+- Interactive theme toggle (light/dark mode)
+- AI chat assistant
+- Glassmorphism design with smooth animations
+
+### 🌐 Deployment Architecture
+
+![Deployment Architecture](generated-diagrams/retailmind-ai-deployment-architecture.png)
+
+This application is deployed on AWS using:
+- **Frontend**: AWS Amplify (Continuous deployment from GitHub)
+- **Backend**: AWS CDK (Lambda, DynamoDB, API Gateway, Bedrock)
+- **CI/CD**: Automatic deployments on every push to main branch
+- **SSL**: Automatic HTTPS with AWS-managed certificates
 
 ## ✨ Key Features
 
@@ -108,6 +131,20 @@ RetailMind-AI/
 - Node.js 18+
 - AWS Account with Bedrock access
 - AWS CLI configured
+- GitHub account (for AWS Amplify deployment)
+
+### Deployment Options
+
+**Option 1: AWS Amplify (Recommended for Frontend)**
+- Automatic CI/CD from GitHub
+- Built-in CDN and SSL
+- Zero-downtime deployments
+- See [Amplify Deployment Guide](docs/deployment/AMPLIFY_DEPLOYMENT.md)
+
+**Option 2: Local Development**
+- Run frontend locally with `npm run dev`
+- Connect to deployed backend API
+- See instructions below
 
 ### 1. Backend Deployment
 
@@ -128,7 +165,39 @@ cdk bootstrap
 cdk deploy
 ```
 
-### 2. Frontend Setup
+**Save the API Gateway URL from the output!**
+
+### 2. Frontend Deployment (AWS Amplify)
+
+**Quick Setup (5 minutes):**
+
+1. **Push code to GitHub** (if not already done)
+   ```bash
+   git add .
+   git commit -m "Initial commit"
+   git push origin main
+   ```
+
+2. **Set up AWS Amplify**
+   - Go to: https://console.aws.amazon.com/amplify/
+   - Click "New app" → "Host web app"
+   - Connect GitHub repository: `RetailMind-AI`
+   - Select branch: `main`
+   - Amplify auto-detects `amplify.yml` ✅
+
+3. **Add Environment Variable**
+   - In Amplify Console, click "Advanced settings"
+   - Add environment variable:
+     - Key: `VITE_API_URL`
+     - Value: `https://YOUR-API-ID.execute-api.us-east-2.amazonaws.com/prod`
+   - Click "Save and deploy"
+
+4. **Wait for deployment** (3-5 minutes)
+   - Your app will be live at: `https://main.YOUR-APP-ID.amplifyapp.com`
+
+**For detailed instructions, see [Amplify Deployment Guide](docs/deployment/AMPLIFY_DEPLOYMENT.md)**
+
+### 2. Frontend Setup (Local Development)
 
 ```bash
 cd frontend
@@ -264,18 +333,36 @@ RetailMind AI features a completely redesigned premium AI SaaS dashboard with mo
 
 ## 💰 Cost Estimation (India)
 
-**Development/Testing (Monthly):**
+**Backend (Monthly):**
+
 - DynamoDB: ~₹80-160 (On-Demand)
 - Lambda: ~₹40-80 (Free tier eligible)
 - API Gateway: ~₹80-160
 - Bedrock: ~₹40-160 (Pay per use)
 - S3: ~₹8-40
-- **Total: ₹400-800/month (~$5-10/month)**
+- **Backend Total: ₹400-800/month (~$5-10/month)**
+
+**Frontend - AWS Amplify (Monthly):**
+
+- Build minutes: ~₹240-400 (10 builds/month)
+- Hosting: ~₹0.01 (5-10 MB bundle)
+- Data transfer: ~₹60 (1 GB/month)
+- **Frontend Total: ₹300-500/month (~$4-6/month)**
+
+**Total Development/Testing Cost: ₹700-1,300/month (~$9-16/month)**
 
 **Production (Monthly):**
+
 - Scales based on usage
-- Estimated: ₹1,600-4,000/month (~$20-50/month) for small business
+- Estimated: ₹2,000-5,000/month (~$25-60/month) for small business
 - Affordable for Indian SMEs and startups
+
+**Free Tier Benefits:**
+
+- Lambda: 1M requests/month free
+- DynamoDB: 25 GB storage free
+- Amplify: 1,000 build minutes/month free
+- API Gateway: 1M requests/month free (first 12 months)
 
 See [Cleanup Guide](docs/deployment/CLEANUP.md) for cost management.
 
@@ -330,12 +417,29 @@ Use the built-in data seeding feature:
 
 ## 🔧 Troubleshooting
 
+### Amplify Build Fails
+
+**Issue**: TypeScript compilation errors or build failures
+
+**Solution**: The project includes fixes for common build issues:
+- TypeScript `import.meta.env` type assertion
+- Unused variable cleanup
+- Memory optimization for large builds
+
+If build still fails:
+1. Check build logs in Amplify Console
+2. Verify `VITE_API_URL` environment variable is set
+3. Ensure `amplify.yml` is in root directory
+4. Try redeploying: Deployments → "Redeploy this version"
+
 ### Bedrock Access Denied
+
 1. Go to AWS Console → Bedrock
 2. Request model access for Nova Premier
 3. Wait for approval (usually instant)
 
 ### CDK Deploy Fails
+
 ```bash
 # Verify AWS credentials
 aws sts get-caller-identity
@@ -345,9 +449,11 @@ cdk bootstrap
 ```
 
 ### Frontend Connection Issues
+
 1. Check `.env` file has correct API URL
 2. Verify CORS is enabled
 3. Check browser console for errors
+4. Verify backend is deployed and accessible
 
 ## 📈 Roadmap
 
