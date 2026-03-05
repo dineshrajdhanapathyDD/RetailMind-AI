@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Upload, X, Database, Package, ShoppingBag, CheckCircle, AlertCircle, FileText } from 'lucide-react'
 import axios from 'axios'
 import { API_ENDPOINTS } from '../config'
@@ -79,74 +80,106 @@ export default function DataUploadModal({ isOpen, onClose, onSuccess }: DataUplo
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        {/* Background overlay */}
-        <div 
-          className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 backdrop-blur-sm"
-          onClick={onClose}
-        />
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            {/* Background overlay with animation */}
+            <motion.div 
+              className="fixed inset-0 transition-opacity bg-gray-900 bg-opacity-75 backdrop-blur-sm"
+              onClick={onClose}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            />
 
-        {/* Modal panel */}
-        <div className="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="bg-white/20 backdrop-blur-sm p-2 rounded-lg">
-                  <Database className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">Seed Sample Data</h3>
-                  <p className="text-sm text-blue-100">Load example products and inventory</p>
+            {/* Modal panel with glassmorphism */}
+            <motion.div 
+              className="inline-block align-bottom glass rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-white/20"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.3, type: 'spring', stiffness: 300 }}
+            >
+              {/* Header */}
+              <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <motion.div 
+                      className="bg-white/20 backdrop-blur-sm p-2 rounded-lg"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Database className="w-6 h-6 text-white" />
+                    </motion.div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white">Seed Sample Data</h3>
+                      <p className="text-sm text-blue-100">Load example products and inventory</p>
+                    </div>
+                  </div>
+                  <motion.button
+                    onClick={onClose}
+                    className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <X className="w-5 h-5" />
+                  </motion.button>
                 </div>
               </div>
-              <button
-                onClick={onClose}
-                className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
 
-          {/* Content */}
-          <div className="px-6 py-6">
-            {success ? (
-              <div className="text-center py-8">
-                <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-10 h-10 text-green-600" />
-                </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2">Data Seeded Successfully!</h4>
-                <p className="text-gray-600">Sample products and inventory have been loaded.</p>
-              </div>
-            ) : (
-              <>
-                {/* Mode Selection */}
-                <div className="flex space-x-2 mb-6">
-                  <button
-                    onClick={() => setUploadMode('sample')}
-                    className={`flex-1 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
-                      uploadMode === 'sample'
-                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+              {/* Content */}
+              <div className="px-6 py-6 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
+                {success ? (
+                  <motion.div 
+                    className="text-center py-8"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
                   >
-                    <Database className="w-5 h-5 inline-block mr-2" />
-                    Sample Data
-                  </button>
-                  <button
-                    onClick={() => setUploadMode('file')}
-                    className={`flex-1 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
-                      uploadMode === 'file'
-                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    <FileText className="w-5 h-5 inline-block mr-2" />
-                    Upload File
-                  </button>
-                </div>
+                    <motion.div 
+                      className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                    >
+                      <CheckCircle className="w-10 h-10 text-green-600" />
+                    </motion.div>
+                    <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Data Seeded Successfully!</h4>
+                    <p className="text-gray-600 dark:text-gray-400">Sample products and inventory have been loaded.</p>
+                  </motion.div>
+                ) : (
+                  <>
+                    {/* Mode Selection */}
+                    <div className="flex space-x-2 mb-6">
+                      <motion.button
+                        onClick={() => setUploadMode('sample')}
+                        className={`flex-1 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                          uploadMode === 'sample'
+                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                        }`}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Database className="w-5 h-5 inline-block mr-2" />
+                        Sample Data
+                      </motion.button>
+                      <motion.button
+                        onClick={() => setUploadMode('file')}
+                        className={`flex-1 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                          uploadMode === 'file'
+                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                        }`}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <FileText className="w-5 h-5 inline-block mr-2" />
+                        Upload File
+                      </motion.button>
+                    </div>
 
                 {uploadMode === 'sample' ? (
                   <>
@@ -275,17 +308,24 @@ PROD001,Wireless Mouse,WM-001,Electronics,TechPro,2499,1250,5,10,50`}
                 )}
 
                 {error && (
-                  <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-4">
-                    <p className="text-sm text-red-800">{error}</p>
-                  </div>
+                  <motion.div 
+                    className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-lg p-4 mb-4"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
+                  </motion.div>
                 )}
 
                 {/* Actions */}
                 <div className="flex space-x-3">
-                  <button
+                  <motion.button
                     onClick={handleSeedData}
                     disabled={loading || (uploadMode === 'file' && !selectedFile)}
-                    className="flex-1 flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    whileHover={!loading && !(uploadMode === 'file' && !selectedFile) ? { scale: 1.02 } : undefined}
+                    whileTap={!loading && !(uploadMode === 'file' && !selectedFile) ? { scale: 0.98 } : undefined}
                   >
                     {loading ? (
                       <>
@@ -298,20 +338,24 @@ PROD001,Wireless Mouse,WM-001,Electronics,TechPro,2499,1250,5,10,50`}
                         {uploadMode === 'sample' ? 'Load Sample Data' : 'Upload & Load Data'}
                       </>
                     )}
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
                     onClick={onClose}
                     disabled={loading}
-                    className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium disabled:opacity-50"
+                    className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 font-medium disabled:opacity-50"
+                    whileHover={!loading ? { scale: 1.02 } : undefined}
+                    whileTap={!loading ? { scale: 0.98 } : undefined}
                   >
                     Cancel
-                  </button>
+                  </motion.button>
                 </div>
               </>
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
+      )}
+    </AnimatePresence>
   )
 }

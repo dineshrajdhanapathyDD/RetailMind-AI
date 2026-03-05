@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* CSS Variables for theming */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-surface: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --text-tertiary: #94a3b8;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  
+  /* Gradient colors */
+  --gradient-purple: #8b5cf6;
+  --gradient-blue: #3b82f6;
+  --gradient-pink: #ec4899;
+}
+
+/* Theme transition */
+.theme-transitioning,
+.theme-transitioning * {
+  transition: background-color 300ms ease-in-out, 
+              color 300ms ease-in-out,
+              border-color 300ms ease-in-out !important;
+}
+
 @layer base {
   body {
     margin: 0;
@@ -10,6 +35,8 @@
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
   }
 
   code {
@@ -19,6 +46,7 @@
 }
 
 @layer utilities {
+  /* Animations */
   .animate-fadeIn {
     animation: fadeIn 0.5s ease-in;
   }
@@ -51,5 +79,55 @@
 
   .animate-pulse-slow {
     animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-float {
+    animation: float 20s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(100px, -100px) scale(1.2);
+    }
+    66% {
+      transform: translate(-100px, 100px) scale(0.9);
+    }
+  }
+  
+  /* Glassmorphism utilities */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+  }
+  
+  .glass-strong {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+  }
+  
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, var(--gradient-purple), var(--gradient-blue), var(--gradient-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
