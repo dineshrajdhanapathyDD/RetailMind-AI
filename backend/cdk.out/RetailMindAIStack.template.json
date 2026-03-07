@@ -148,15 +148,7 @@
       "Arn"
      ]
     },
-    "Runtime": {
-     "Fn::FindInMap": [
-      "LatestNodeRuntimeMap",
-      {
-       "Ref": "AWS::Region"
-      },
-      "value"
-     ]
-    },
+    "Runtime": "nodejs22.x",
     "Description": {
      "Fn::Join": [
       "",
@@ -317,8 +309,6 @@
       {
        "Action": [
         "dynamodb:BatchGetItem",
-        "dynamodb:GetRecords",
-        "dynamodb:GetShardIterator",
         "dynamodb:Query",
         "dynamodb:GetItem",
         "dynamodb:Scan",
@@ -330,23 +320,29 @@
         "dynamodb:DescribeTable"
        ],
        "Effect": "Allow",
-       "Resource": [
-        {
-         "Fn::GetAtt": [
-          "ProductsTable241ADBFF",
-          "Arn"
-         ]
-        },
-        {
-         "Ref": "AWS::NoValue"
-        }
-       ]
+       "Resource": {
+        "Fn::GetAtt": [
+         "ProductsTable241ADBFF",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "ProductsTable241ADBFF",
+         "Arn"
+        ]
+       }
       },
       {
        "Action": [
         "dynamodb:BatchGetItem",
-        "dynamodb:GetRecords",
-        "dynamodb:GetShardIterator",
         "dynamodb:Query",
         "dynamodb:GetItem",
         "dynamodb:Scan",
@@ -358,23 +354,29 @@
         "dynamodb:DescribeTable"
        ],
        "Effect": "Allow",
-       "Resource": [
-        {
-         "Fn::GetAtt": [
-          "InventoryTableFD135387",
-          "Arn"
-         ]
-        },
-        {
-         "Ref": "AWS::NoValue"
-        }
-       ]
+       "Resource": {
+        "Fn::GetAtt": [
+         "InventoryTableFD135387",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "InventoryTableFD135387",
+         "Arn"
+        ]
+       }
       },
       {
        "Action": [
         "dynamodb:BatchGetItem",
-        "dynamodb:GetRecords",
-        "dynamodb:GetShardIterator",
         "dynamodb:Query",
         "dynamodb:GetItem",
         "dynamodb:Scan",
@@ -386,17 +388,25 @@
         "dynamodb:DescribeTable"
        ],
        "Effect": "Allow",
-       "Resource": [
-        {
-         "Fn::GetAtt": [
-          "RecommendationsTable1B1B4C4D",
-          "Arn"
-         ]
-        },
-        {
-         "Ref": "AWS::NoValue"
-        }
-       ]
+       "Resource": {
+        "Fn::GetAtt": [
+         "RecommendationsTable1B1B4C4D",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "RecommendationsTable1B1B4C4D",
+         "Arn"
+        ]
+       }
       },
       {
        "Action": [
@@ -783,7 +793,8 @@
     "RetailMindAPIseed36CCD5B6"
    ],
    "Metadata": {
-    "aws:cdk:path": "RetailMindAIStack/RetailMindAPI/Deployment/Resource"
+    "aws:cdk:path": "RetailMindAIStack/RetailMindAPI/Deployment/Resource",
+    "aws:cdk:do-not-refactor": true
    }
   },
   "RetailMindAPIDeploymentStageprod9C8AC270": {
@@ -1917,118 +1928,12 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/22QwU7DMAyGn2X3LAwqHmAb4oaoOu6Tm5jNrEmq2mGqor47Slq0CXH6P/u3YztP+vF5ozcruPLa2Mu6o1ang4C5KLjyMXGl0y6aC4raf/qFZqlDR2a8pZd4DnbAOCk7enDBtjp9QNthri0wKQKnUxPmXNHbczNNqgPXWtDpNXojFHz27rnGwREzBT8pro7AjMJ6m0VBTycQvMKoU4Ms257KpBtujQnRi3rBvgujQ18uvIsOAqey3gwNcoiDwXyZekM5B5vNhX7dZUjhaVL7yBLcf2bphb4nf/pTVQ/hmywOZVC5Ji+Q6+5736P0say8D96SlF+oRzkH/1Dpx0pXqy8mWg/RCznUzaw/+V5ccfABAAA="
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/22PQU/DMAyFf8vuWWAbEudtiBui6rhPbmo2r01S1Q5TFeW/o6ZFG4jT+55f9Byv9fpppR8XcOWlqZtlS5WOBwHTKLjyMfJGx10wDYraf7qZJil8S2a4jWc/mR0wJlUPDqyvKx0/oGpxfJshKQKrY+mnWdZb3URJtWCrGnR8Dc4IeTdm91xgb4mZvEuKN0dgRmG9HUVBRycQvMKgY4ks247yphtujfHBiXrBrvWDRZcvvHMHgVP+3gQlsg+9wfEy9YZy9vUYzvSTzksyp6T2gcXb/8I/UdH7L6qxz+35hHErudOv5vcgXZCkikHO3j1s9GqtnxcXJlr2wQlZ1OWk32rPPFPYAQAA"
    },
    "Metadata": {
     "aws:cdk:path": "RetailMindAIStack/CDKMetadata/Default"
    },
    "Condition": "CDKMetadataAvailable"
-  }
- },
- "Mappings": {
-  "LatestNodeRuntimeMap": {
-   "af-south-1": {
-    "value": "nodejs20.x"
-   },
-   "ap-east-1": {
-    "value": "nodejs20.x"
-   },
-   "ap-northeast-1": {
-    "value": "nodejs20.x"
-   },
-   "ap-northeast-2": {
-    "value": "nodejs20.x"
-   },
-   "ap-northeast-3": {
-    "value": "nodejs20.x"
-   },
-   "ap-south-1": {
-    "value": "nodejs20.x"
-   },
-   "ap-south-2": {
-    "value": "nodejs20.x"
-   },
-   "ap-southeast-1": {
-    "value": "nodejs20.x"
-   },
-   "ap-southeast-2": {
-    "value": "nodejs20.x"
-   },
-   "ap-southeast-3": {
-    "value": "nodejs20.x"
-   },
-   "ap-southeast-4": {
-    "value": "nodejs20.x"
-   },
-   "ap-southeast-5": {
-    "value": "nodejs20.x"
-   },
-   "ap-southeast-7": {
-    "value": "nodejs20.x"
-   },
-   "ca-central-1": {
-    "value": "nodejs20.x"
-   },
-   "ca-west-1": {
-    "value": "nodejs20.x"
-   },
-   "cn-north-1": {
-    "value": "nodejs18.x"
-   },
-   "cn-northwest-1": {
-    "value": "nodejs18.x"
-   },
-   "eu-central-1": {
-    "value": "nodejs20.x"
-   },
-   "eu-central-2": {
-    "value": "nodejs20.x"
-   },
-   "eu-north-1": {
-    "value": "nodejs20.x"
-   },
-   "eu-south-1": {
-    "value": "nodejs20.x"
-   },
-   "eu-south-2": {
-    "value": "nodejs20.x"
-   },
-   "eu-west-1": {
-    "value": "nodejs20.x"
-   },
-   "eu-west-2": {
-    "value": "nodejs20.x"
-   },
-   "eu-west-3": {
-    "value": "nodejs20.x"
-   },
-   "il-central-1": {
-    "value": "nodejs20.x"
-   },
-   "me-central-1": {
-    "value": "nodejs20.x"
-   },
-   "me-south-1": {
-    "value": "nodejs20.x"
-   },
-   "mx-central-1": {
-    "value": "nodejs20.x"
-   },
-   "sa-east-1": {
-    "value": "nodejs20.x"
-   },
-   "us-east-1": {
-    "value": "nodejs20.x"
-   },
-   "us-east-2": {
-    "value": "nodejs20.x"
-   },
-   "us-west-1": {
-    "value": "nodejs20.x"
-   },
-   "us-west-2": {
-    "value": "nodejs20.x"
-   }
   }
  },
  "Outputs": {
@@ -2101,7 +2006,23 @@
         {
          "Ref": "AWS::Region"
         },
+        "ap-northeast-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
         "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-2"
        ]
       },
       {
@@ -2125,7 +2046,35 @@
         {
          "Ref": "AWS::Region"
         },
+        "ap-southeast-3"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-4"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
         "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-west-1"
        ]
       },
       {
@@ -2143,17 +2092,21 @@
         },
         "cn-northwest-1"
        ]
-      }
-     ]
-    },
-    {
-     "Fn::Or": [
+      },
       {
        "Fn::Equals": [
         {
          "Ref": "AWS::Region"
         },
         "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-2"
        ]
       },
       {
@@ -2172,6 +2125,18 @@
         "eu-south-1"
        ]
       },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
       {
        "Fn::Equals": [
         {
@@ -2227,11 +2192,7 @@
         },
         "sa-east-1"
        ]
-      }
-     ]
-    },
-    {
-     "Fn::Or": [
+      },
       {
        "Fn::Equals": [
         {
@@ -2255,15 +2216,15 @@
         },
         "us-west-1"
        ]
-      },
-      {
-       "Fn::Equals": [
-        {
-         "Ref": "AWS::Region"
-        },
-        "us-west-2"
-       ]
       }
+     ]
+    },
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AWS::Region"
+      },
+      "us-west-2"
      ]
     }
    ]
