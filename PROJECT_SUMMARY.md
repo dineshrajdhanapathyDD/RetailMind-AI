@@ -604,7 +604,7 @@ An affordable, serverless, AI-powered inventory management system that:
 
 ## 📞 Contact & Support
 
-**Project Maintainer**: Dineshraj Dhanapathy
+**Project Maintainer**: Dineshraj Dhanapathy, Ajay kumar k v, Sakshi, vijayaraghavan vashudevan
 
 **GitHub**: [https://github.com/dineshrajdhanapathyDD/RetailMind-AI](https://github.com/dineshrajdhanapathyDD/RetailMind-AI)
 
